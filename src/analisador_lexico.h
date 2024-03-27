@@ -6,11 +6,16 @@
 char *strAtomo[]={    
     "Fim de buffer(EOS)",
     "Erro Lexico",
-    "IDENTIFICADOR",
-    "NUMERO",
-    "PALAVRA_RESERVADA",
+    "identificador",
+    "numero",
+    "palavra_reservada",
     "+",
-    "*"
+    "*",
+    "abre_par",
+    "fecha_par",
+    "abre_chaves",
+    "fecha_chaves",
+    "ponto_virgula"
 };
 
 typedef enum{
@@ -21,15 +26,20 @@ typedef enum{
     PALAVRA_RESERVADA,
     // operadores
     OP_SOMA, 
-    OP_MULT
+    OP_MULT,
+    ABRE_PAR,
+    FECHA_PAR,
+    ABRE_CHAVES,
+    FECHA_CHAVES,
+    PONTO_VIRGULA
 }TAtomo;
 
 typedef struct{
     TAtomo atomo;
     int linha;
     float atributo_numero;
-    char atributo_ID[16];
-    char palavra_reservada[6];
+    char atributo[15];
+    char erro[100];
 }TInfoAtomo;
 
 void ignora_delimitadores();
