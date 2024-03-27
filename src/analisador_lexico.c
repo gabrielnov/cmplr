@@ -1,7 +1,7 @@
 #include "analisador_lexico.h"
 
 int linha = 1;
-char *buffer = "_ajsiahys1AAA \n ";
+char *buffer = "0x785FA\n ";
 
 void ignora_delimitadores(){
     while(*buffer == ' ' || *buffer == '\n' || *buffer == '\t' || *buffer == '\r'){
@@ -62,55 +62,38 @@ q1:
 
     if( buffer - iniLexema <= 15 ){ // maximo de quinze characteres, incluindo o underline que foi removido anteriormente
         // referencia:https://cplusplus.com/reference/cstring/strncpy/
-        strncpy(infoAtomo.atributo_ID,iniLexema,buffer-iniLexema);
-        infoAtomo.atributo_ID[buffer-iniLexema]='\0'; // finaliza string
+        strncpy(infoAtomo.atributo_ID,iniLexema, buffer - iniLexema);
+        infoAtomo.atributo_ID[buffer-iniLexema] = '\0'; // finaliza string
         infoAtomo.atomo = IDENTIFICADOR;
     }else
         infoAtomo.atomo = ERRO;
 
-finish:
     return infoAtomo;
-
 }
 
 TAtomo reconhece_num(){
 
 q0:
-    if(isdigit(*buffer)){
+    if(*buffer == 'x'){
         buffer++;
         goto q1;
-    }
-
-    return ERRO; // [outro]
+    }else
+        return ERRO; // [outro]
 q1:
-    if(isdigit(*buffer)){
+    if(
+        (*buffer >= 65 && * buffer <= 70 ) ||
+        (*buffer >= 48 && * buffer <= 57 ) 
+    ){
         buffer++;
         goto q1;
     }
-    if(*buffer == '.'){
-        buffer++;
-        goto q2;
-    }
-    return ERRO; // [outro]
-q2:
-    if(isdigit(*buffer)){
-        buffer++;
-        goto q3;
-    }
-    return ERRO; // [outro]
-q3:
-    if(isdigit(*buffer)){
-        buffer++;
-        goto q3;
-    }
-    if(isalpha(*buffer))
-        return ERRO;
     
-//    goto q4;
-//q4:
-    // aqui recortar e converter a sequencia de digito para float.
+    if (*buffer != '\0' && *buffer != ' ' && *buffer != '\n' && *buffer != '\r'){
+        return ERRO;
+    }      
+        
+    
     return NUMERO;
-
 }
 
 
