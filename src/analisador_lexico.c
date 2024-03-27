@@ -1,7 +1,7 @@
 #include "analisador_lexico.h"
 
 int linha = 1;
-char *buffer = "if\n else\n _var1 0xF ";
+char *buffer = "0x123";
 
 void ignora_delimitadores(){
     while(
@@ -28,12 +28,10 @@ TInfoAtomo obter_atomo(){
         infoAtomo.atomo = OP_MULT;
     }
     else if(*buffer == '_'){
-        buffer++; // opcional?
         infoAtomo = reconhece_id();
     }
     else if(*buffer == '0'){
-        buffer++; // opcional?
-        infoAtomo.atomo = reconhece_num();        
+        infoAtomo = reconhece_numero();        
     }
     else if(*buffer == '\0')
         infoAtomo.atomo = EOS;
@@ -50,45 +48,53 @@ TInfoAtomo reconhece_id(){
     iniLexema = buffer;
 
 q0:
-    if(isalpha(*buffer)){
+    if (*buffer == '_'){
         buffer++;
         goto q1;
-    } else
-        infoAtomo.atomo = ERRO;
+    } else infoAtomo.atomo = ERRO;
 q1:
+    if(isalpha(*buffer)){
+        buffer++;
+        goto q2;
+    } else infoAtomo.atomo = ERRO;
+q2:
     if(isalpha(*buffer) || isdigit(*buffer)){
         buffer++;    
         goto q1;
-    } else
-        infoAtomo.atomo = ERRO;
+    } else infoAtomo.atomo = ERRO;
     
-
-    if( buffer - iniLexema <= 15 ){ // maximo de quinze characteres, incluindo o underline que foi removido anteriormente
-        // referencia:https://cplusplus.com/reference/cstring/strncpy/
+    if( buffer - iniLexema <= 15 ){ // maximo de quinze characteres por identificador
         strncpy(infoAtomo.atributo_ID, iniLexema, buffer - iniLexema);
         infoAtomo.atributo_ID[buffer-iniLexema] = '\0'; // finaliza string
         infoAtomo.atomo = IDENTIFICADOR;
-    }else
-        infoAtomo.atomo = ERRO;
+    } else infoAtomo.atomo = ERRO;
 
     return infoAtomo;
 }
 
-TAtomo reconhece_num(){
+TInfoAtomo reconhece_numero(){
+    char *iniLexema;
+    iniLexema = buffer;
+    TInfoAtomo infoAtomo;
+    infoAtomo.atomo = NUMERO;
 
 q0:
-    if(*buffer == 'x'){
+    if(*buffer == '0'){
         buffer++;
         goto q1;
-    }else
-        return ERRO; // [outro]
+    } else infoAtomo.atomo = ERRO; 
 q1:
+    if(*buffer == 'x'){
+        buffer++;
+        goto q2;
+    } else infoAtomo.atomo = ERRO; 
+q2:
     if(
         (*buffer >= 65 && * buffer <= 70 ) ||
         (*buffer >= 48 && * buffer <= 57 ) 
     ){
         buffer++;
-        goto q1;
+        goto q2;
     }
     
     if (
@@ -98,9 +104,12 @@ q1:
         *buffer != '\t' &&
         *buffer != '\0' 
         )
-        return ERRO;        
-        
-    return NUMERO;
+    { infoAtomo.atomo = ERRO; }
+
+    // convertendo hex para dec
+    infoAtomo.atributo_numero = strtol(iniLexema, (char**)NULL, 16);
+
+    return infoAtomo;
 }
 
 TInfoAtomo reconhece_palavra_reservada(){
@@ -153,6 +162,6 @@ int main(void){
     printf("Analisando:\n%s\n",buffer);
 
     infoAtomo = obter_atomo();
-    printf("%s \n", strAtomo[infoAtomo.atomo]);
+    printf("%d | %s | %.5f\n", linha, strAtomo[infoAtomo.atomo], infoAtomo.atributo_numero);
         
 }

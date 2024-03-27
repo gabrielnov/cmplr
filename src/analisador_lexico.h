@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdlib.h> 
 
 char *strAtomo[]={    
     "Fim de buffer(EOS)",
@@ -35,4 +36,4 @@ void ignora_delimitadores();
 TInfoAtomo obter_atomo();
 TInfoAtomo reconhece_id();
 TInfoAtomo reconhece_palavra_reservada();
-TAtomo reconhece_num();
+TInfoAtomo reconhece_numero();
