@@ -1,10 +1,11 @@
 #include "analisador_lexico.h"
 
 int linha = 1;
-char *buffer = "0x785FA\n ";
+char *buffer = "if\n else\n _var1 0xF ";
 
 void ignora_delimitadores(){
-    while(*buffer == ' ' || *buffer == '\n' || *buffer == '\t' || *buffer == '\r'){
+    while(
+        *buffer == ' ' || *buffer == '\n' || *buffer == '\t' || *buffer == '\r'){
         if(*buffer=='\n')
             linha++;
 
@@ -36,7 +37,9 @@ TInfoAtomo obter_atomo(){
     }
     else if(*buffer == '\0')
         infoAtomo.atomo = EOS;
-    
+    else if(isalpha(*buffer))
+        infoAtomo = reconhece_palavra_reservada();
+
     infoAtomo.linha = linha;
     return infoAtomo;
 }
@@ -62,7 +65,7 @@ q1:
 
     if( buffer - iniLexema <= 15 ){ // maximo de quinze characteres, incluindo o underline que foi removido anteriormente
         // referencia:https://cplusplus.com/reference/cstring/strncpy/
-        strncpy(infoAtomo.atributo_ID,iniLexema, buffer - iniLexema);
+        strncpy(infoAtomo.atributo_ID, iniLexema, buffer - iniLexema);
         infoAtomo.atributo_ID[buffer-iniLexema] = '\0'; // finaliza string
         infoAtomo.atomo = IDENTIFICADOR;
     }else
@@ -88,25 +91,68 @@ q1:
         goto q1;
     }
     
-    if (*buffer != '\0' && *buffer != ' ' && *buffer != '\n' && *buffer != '\r'){
-        return ERRO;
-    }      
+    if (
+        *buffer != ' '  && 
+        *buffer != '\n' && 
+        *buffer != '\r' &&
+        *buffer != '\t' &&
+        *buffer != '\0' 
+        )
+        return ERRO;        
         
-    
     return NUMERO;
 }
 
+TInfoAtomo reconhece_palavra_reservada(){
+    const int MAX_LENGTH = 6;
+    char lexema[MAX_LENGTH];
+    TInfoAtomo infoAtomo;
+    infoAtomo.atomo = ERRO;
+
+    int i = 0;
+
+    while (
+        *buffer != ' '  && 
+        *buffer != '\n' && 
+        *buffer != '\r' &&  
+        *buffer != '\t' && 
+        *buffer != '\0'
+        )
+    {
+        if (i > MAX_LENGTH)
+            return infoAtomo;
+        
+        lexema[i] = *buffer;
+        buffer++;
+        i++;
+    }
+    
+    if (
+        strcmp(lexema, "while") == 0 ||
+        strcmp(lexema, "if") == 0 ||
+        strcmp(lexema, "else") == 0 ||
+        strcmp(lexema, "void") == 0 ||
+        strcmp(lexema, "int") == 0 ||
+        strcmp(lexema, "bool") == 0 ||
+        strcmp(lexema, "true") == 0 ||
+        strcmp(lexema, "false") == 0 ||
+        strcmp(lexema, "main") == 0 ||
+        strcmp(lexema, "printf") == 0 ||
+        strcmp(lexema, "scanf") == 0
+    ) infoAtomo.atomo = PALAVRA_RESERVADA; 
+
+    strcpy(infoAtomo.palavra_reservada, lexema);
+    
+    return infoAtomo;
+}
 
 TAtomo lookahead;
 TInfoAtomo infoAtomo;
 
 int main(void){
     printf("Analisando:\n%s\n",buffer);
+
     infoAtomo = obter_atomo();
-
-    char *strAtomo[]={"Erro Lexico","IDENTIFICADOR","NUMERO","+","*","Fim de buffer(EOS)"};
-
-    printf("%s\n", strAtomo[infoAtomo.atomo]);
-
-
+    printf("%s \n", strAtomo[infoAtomo.atomo]);
+        
 }
