@@ -1,11 +1,37 @@
 #include "analisador_lexico.h"
+#include "tokens.h"
 
 int linha = 1;
-char *buffer = "0x123 ;\n"
-                "int _teste ;\n"
-                "printaaaaaaf() ;\n"
-                ">  >=\n"
-                "< <= >";
+char *buffer = "int main(void) { }";
+
+char * lista_tokens[]={    
+        "Fim de buffer(EOS)",
+        "Erro Lexico",
+        "identificador",
+        "numero",
+        "menor",
+        "menor_igual",
+        "maior",
+        "maior_igual",
+        "+",
+        "*",
+        "abre_par",
+        "fecha_par",
+        "abre_chaves",
+        "fecha_chaves",
+        "ponto_virgula",
+        "pr_int",
+        "pr_bool",
+        "pr_main",
+        "pr_printf",
+        "pr_scanf",
+        "pr_if",
+        "pr_else",
+        "pr_while",
+        "pr_void",
+        "pr_true",
+        "pr_false",
+    };
 
 void ignora_delimitadores(){
     while(
@@ -75,7 +101,7 @@ TInfoAtomo obter_atomo(){
         info_atomo.atomo = OP_MULT;
     }
    
-   strcpy(  info_atomo.atributo, str_atomo[info_atomo.atomo]);
+   strcpy(info_atomo.atributo, lista_tokens[info_atomo.atomo]);
     
     
     if(*buffer == '_')
@@ -192,21 +218,19 @@ TInfoAtomo reconhece_palavra_reservada(){
         i++;
     }
     
-    if (
-        strcmp(lexema, "while") == 0 ||
-        strcmp(lexema, "if") == 0 ||
-        strcmp(lexema, "else") == 0 ||
-        strcmp(lexema, "void") == 0 ||
-        strcmp(lexema, "int") == 0 ||
-        strcmp(lexema, "bool") == 0 ||
-        strcmp(lexema, "true") == 0 ||
-        strcmp(lexema, "false") == 0 ||
-        strcmp(lexema, "main") == 0 ||
-        strcmp(lexema, "printf") == 0 ||
-        strcmp(lexema, "scanf") == 0
-    ) info_atomo.atomo = PALAVRA_RESERVADA; 
+    if (strcmp(lexema, "while") == 0) info_atomo.atomo = PR_WHILE;
+    else if (strcmp(lexema, "if") == 0) info_atomo.atomo = PR_IF;
+    else if (strcmp(lexema, "else") == 0) info_atomo.atomo = PR_ELSE;
+    else if (strcmp(lexema, "void") == 0) info_atomo.atomo = PR_VOID;
+    else if (strcmp(lexema, "int") == 0) info_atomo.atomo = PR_INT;
+    else if (strcmp(lexema, "bool") == 0) info_atomo.atomo = PR_BOOL;
+    else if (strcmp(lexema, "true") == 0) info_atomo.atomo = PR_TRUE;
+    else if (strcmp(lexema, "false") == 0) info_atomo.atomo = PR_FALSE;
+    else if (strcmp(lexema, "main") == 0) info_atomo.atomo = PR_MAIN;
+    else if (strcmp(lexema, "printf") == 0) info_atomo.atomo = PR_PRINTF;
+    else if (strcmp(lexema, "scanf") == 0) info_atomo.atomo = PR_SCANF;
 
-    strcpy(info_atomo.atributo, lexema);
+    strcpy(info_atomo.atributo, lista_tokens[info_atomo.atomo]);
     
     if (info_atomo.atomo == ERRO)
         strcpy(info_atomo.erro, lexema);
@@ -214,31 +238,30 @@ TInfoAtomo reconhece_palavra_reservada(){
     return info_atomo;
 }
 
-TAtomo lookahead;
-TInfoAtomo info_atomo;
+// int main(void){
+//     TInfoAtomo info_atomo;
 
-int main(void){
-    printf("Analisando:\n\n----\n%s\n----\n\n",buffer);
+//     printf("Analisando:\n\n----\n%s\n----\n\n",buffer);
 
-    while(1){
-        info_atomo = obter_atomo();
-        if( info_atomo.atomo == EOS )
-            break;
+//     while(1){
+//         info_atomo = obter_atomo();
+//         if( info_atomo.atomo == EOS )
+//             break;
 
-        printf("# %d: ", info_atomo.linha);
+//         printf("# %d: ", info_atomo.linha);
 
-        if( info_atomo.atomo == IDENTIFICADOR)
-            printf("identificador | ");
-        else if( info_atomo.atomo == NUMERO ){
-            printf("numero | %.4f\n", info_atomo.atributo_numero);
-            continue;             
-        }
-        else if( info_atomo.atomo == ERRO ){
-            printf("erro lexico: %s\n", info_atomo.erro);
-            break;
-        }
+//         if( info_atomo.atomo == IDENTIFICADOR)
+//             printf("identificador | ");
+//         else if( info_atomo.atomo == NUMERO ){
+//             printf("numero | %.4f\n", info_atomo.atributo_numero);
+//             continue;             
+//         }
+//         else if( info_atomo.atomo == ERRO ){
+//             printf("erro lexico: %s\n", info_atomo.erro);
+//             break;
+//         }
 
-        printf("%s\n", info_atomo.atributo);
-    }    
+//         printf("%s\n", info_atomo.atributo);
+//     }    
         
-}
+// }

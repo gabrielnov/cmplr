@@ -1,29 +1,11 @@
-
-char *str_atomo[]={    
-    "Fim de buffer(EOS)",
-    "Erro Lexico",
-    "identificador",
-    "numero",
-    "palavra_reservada",
-    "menor",
-    "menor_igual",
-    "maior",
-    "maior_igual",
-    "+",
-    "*",
-    "abre_par",
-    "fecha_par",
-    "abre_chaves",
-    "fecha_chaves",
-    "ponto_virgula"
-};
+#ifndef _TOKENS_H_
+#define _TOKENS_H_
 
 typedef enum{
     EOS, // end of string    
     ERRO,
     IDENTIFICADOR,
     NUMERO,
-    PALAVRA_RESERVADA,
     // operadores
     MENOR,
     MENOR_IGUAL,
@@ -35,8 +17,21 @@ typedef enum{
     FECHA_PAR,
     ABRE_CHAVES,
     FECHA_CHAVES,
-    PONTO_VIRGULA
-}TAtomo;
+    PONTO_VIRGULA,
+    // palavras reservadas
+    PR_INT,
+    PR_BOOL,
+    PR_MAIN,
+    PR_PRINTF,
+    PR_SCANF,
+    PR_IF,
+    PR_ELSE,
+    PR_WHILE,
+    PR_VOID,
+    PR_TRUE,
+    PR_FALSE
+
+} TAtomo;
 
 typedef struct{
     TAtomo atomo;
@@ -44,4 +39,6 @@ typedef struct{
     float atributo_numero;
     char atributo[15];
     char erro[100];
-}TInfoAtomo;
+} TInfoAtomo;
+
+#endif
