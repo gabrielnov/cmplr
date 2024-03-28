@@ -19,78 +19,78 @@ void ignora_delimitadores(){
 }
 
 TInfoAtomo obter_atomo(){
-    TInfoAtomo infoAtomo;
-    infoAtomo.atomo=ERRO;
+    TInfoAtomo info_atomo;
+    info_atomo.atomo=ERRO;
     
     ignora_delimitadores();
 
     if(*buffer == '\0')
-        infoAtomo.atomo = EOS;
+        info_atomo.atomo = EOS;
     else if(*buffer == ';'){
         buffer++;
-        infoAtomo.atomo = PONTO_VIRGULA;
+        info_atomo.atomo = PONTO_VIRGULA;
     }
     else if(*buffer == ')'){
         buffer++;
-        infoAtomo.atomo = FECHA_PAR;
+        info_atomo.atomo = FECHA_PAR;
     }
     else if(*buffer == '('){
         buffer++;
-        infoAtomo.atomo = ABRE_PAR;
+        info_atomo.atomo = ABRE_PAR;
     }
     else if(*buffer == ')'){
         buffer++;
-        infoAtomo.atomo = FECHA_PAR;
+        info_atomo.atomo = FECHA_PAR;
     }
     else if(*buffer == '{'){
         buffer++;
-        infoAtomo.atomo = ABRE_CHAVES;
+        info_atomo.atomo = ABRE_CHAVES;
     }
     else if(*buffer == '}'){
         buffer++;
-        infoAtomo.atomo = FECHA_CHAVES;
+        info_atomo.atomo = FECHA_CHAVES;
     }
     else if(*buffer == '<'){
         buffer++;
-        infoAtomo.atomo = MENOR;
+        info_atomo.atomo = MENOR;
         if (*buffer == '='){
             buffer++;
-            infoAtomo.atomo = MENOR_IGUAL;
+            info_atomo.atomo = MENOR_IGUAL;
         }
     }
     else if(*buffer == '>'){
         buffer++;
-        infoAtomo.atomo = MAIOR;
+        info_atomo.atomo = MAIOR;
         if (*buffer == '='){
             buffer++;
-            infoAtomo.atomo = MAIOR_IGUAL;
+            info_atomo.atomo = MAIOR_IGUAL;
         }
     }
     else if(*buffer == '+' || *buffer == '-'){
         buffer++;
-        infoAtomo.atomo = OP_SOMA;
+        info_atomo.atomo = OP_SOMA;
     }
     else if(*buffer == '*' || *buffer == '/'){
         buffer++;
-        infoAtomo.atomo = OP_MULT;
+        info_atomo.atomo = OP_MULT;
     }
    
-   strcpy(  infoAtomo.atributo, strAtomo[infoAtomo.atomo]);
+   strcpy(  info_atomo.atributo, str_atomo[info_atomo.atomo]);
     
     
     if(*buffer == '_')
-        infoAtomo = reconhece_id();
+        info_atomo = reconhece_id();
     else if(*buffer == '0')
-        infoAtomo = reconhece_numero();        
+        info_atomo = reconhece_numero();        
     else if(isalpha(*buffer))
-        infoAtomo = reconhece_palavra_reservada();
+        info_atomo = reconhece_palavra_reservada();
 
-    infoAtomo.linha = linha;
-    return infoAtomo;
+    info_atomo.linha = linha;
+    return info_atomo;
 }
 
 TInfoAtomo reconhece_id(){
-    TInfoAtomo infoAtomo;
+    TInfoAtomo info_atomo;
     char *iniLexema;
     iniLexema = buffer;
 
@@ -98,46 +98,46 @@ q0:
     if (*buffer == '_'){
         buffer++;
         goto q1;
-    } else infoAtomo.atomo = ERRO;
+    } else info_atomo.atomo = ERRO;
 q1:
     if(isalpha(*buffer)){
         buffer++;
         goto q2;
-    } else infoAtomo.atomo = ERRO;
+    } else info_atomo.atomo = ERRO;
 q2:
     if(isalpha(*buffer) || isdigit(*buffer)){
         buffer++;    
         goto q1;
-    } else infoAtomo.atomo = ERRO;
+    } else info_atomo.atomo = ERRO;
     
     if( buffer - iniLexema <= 15 ){ // maximo de quinze characteres por identificador
-        strncpy(infoAtomo.atributo, iniLexema, buffer - iniLexema);
-        infoAtomo.atributo[buffer-iniLexema] = '\0'; // finaliza string
-        infoAtomo.atomo = IDENTIFICADOR;
-    } else infoAtomo.atomo = ERRO;
+        strncpy(info_atomo.atributo, iniLexema, buffer - iniLexema);
+        info_atomo.atributo[buffer-iniLexema] = '\0'; // finaliza string
+        info_atomo.atomo = IDENTIFICADOR;
+    } else info_atomo.atomo = ERRO;
 
-    if (infoAtomo.atomo == ERRO) 
-        strcpy(infoAtomo.erro, iniLexema);
+    if (info_atomo.atomo == ERRO) 
+        strcpy(info_atomo.erro, iniLexema);
 
-    return infoAtomo;
+    return info_atomo;
 }
 
 TInfoAtomo reconhece_numero(){
     char *iniLexema;
     iniLexema = buffer;
-    TInfoAtomo infoAtomo;
-    infoAtomo.atomo = NUMERO;
+    TInfoAtomo info_atomo;
+    info_atomo.atomo = NUMERO;
 
 q0:
     if(*buffer == '0'){
         buffer++;
         goto q1;
-    } else infoAtomo.atomo = ERRO; 
+    } else info_atomo.atomo = ERRO; 
 q1:
     if(*buffer == 'x'){
         buffer++;
         goto q2;
-    } else infoAtomo.atomo = ERRO; 
+    } else info_atomo.atomo = ERRO; 
 q2:
     if(
         (*buffer >= 65 && * buffer <= 70 ) ||
@@ -154,15 +154,15 @@ q2:
         *buffer != '\t' &&
         *buffer != '\0' 
         )
-    { infoAtomo.atomo = ERRO; }
+    { info_atomo.atomo = ERRO; }
 
-    if (infoAtomo.atomo == ERRO) 
-        strcpy(infoAtomo.erro, iniLexema);
+    if (info_atomo.atomo == ERRO) 
+        strcpy(info_atomo.erro, iniLexema);
 
     // convertendo hex para dec
-    infoAtomo.atributo_numero = strtol(iniLexema, (char**)NULL, 16);
+    info_atomo.atributo_numero = strtol(iniLexema, (char**)NULL, 16);
 
-    return infoAtomo;
+    return info_atomo;
 }
 
 TInfoAtomo reconhece_palavra_reservada(){
@@ -170,8 +170,8 @@ TInfoAtomo reconhece_palavra_reservada(){
     char lexema[MAX_LENGTH];
     memset(lexema, 0, MAX_LENGTH);
 
-    TInfoAtomo infoAtomo;
-    infoAtomo.atomo = ERRO;
+    TInfoAtomo info_atomo;
+    info_atomo.atomo = ERRO;
 
     int i = 0;
 
@@ -185,7 +185,7 @@ TInfoAtomo reconhece_palavra_reservada(){
         )
     {
         if (i > MAX_LENGTH)
-            return infoAtomo; // TODO copiar lexema para mensagem de erro
+            return info_atomo; // TODO copiar lexema para mensagem de erro
         
         lexema[i] = *buffer;
         buffer++;
@@ -204,41 +204,41 @@ TInfoAtomo reconhece_palavra_reservada(){
         strcmp(lexema, "main") == 0 ||
         strcmp(lexema, "printf") == 0 ||
         strcmp(lexema, "scanf") == 0
-    ) infoAtomo.atomo = PALAVRA_RESERVADA; 
+    ) info_atomo.atomo = PALAVRA_RESERVADA; 
 
-    strcpy(infoAtomo.atributo, lexema);
+    strcpy(info_atomo.atributo, lexema);
     
-    if (infoAtomo.atomo == ERRO)
-        strcpy(infoAtomo.erro, lexema);
+    if (info_atomo.atomo == ERRO)
+        strcpy(info_atomo.erro, lexema);
 
-    return infoAtomo;
+    return info_atomo;
 }
 
 TAtomo lookahead;
-TInfoAtomo infoAtomo;
+TInfoAtomo info_atomo;
 
 int main(void){
     printf("Analisando:\n\n----\n%s\n----\n\n",buffer);
 
     while(1){
-        infoAtomo = obter_atomo();
-        if( infoAtomo.atomo == EOS )
+        info_atomo = obter_atomo();
+        if( info_atomo.atomo == EOS )
             break;
 
-        printf("# %d: ", infoAtomo.linha);
+        printf("# %d: ", info_atomo.linha);
 
-        if( infoAtomo.atomo == IDENTIFICADOR)
+        if( info_atomo.atomo == IDENTIFICADOR)
             printf("identificador | ");
-        else if( infoAtomo.atomo == NUMERO ){
-            printf("numero | %.4f\n", infoAtomo.atributo_numero);
+        else if( info_atomo.atomo == NUMERO ){
+            printf("numero | %.4f\n", info_atomo.atributo_numero);
             continue;             
         }
-        else if( infoAtomo.atomo == ERRO ){
-            printf("erro lexico: %s\n", infoAtomo.erro);
+        else if( info_atomo.atomo == ERRO ){
+            printf("erro lexico: %s\n", info_atomo.erro);
             break;
         }
 
-        printf("%s\n", infoAtomo.atributo);
+        printf("%s\n", info_atomo.atributo);
     }    
         
 }
