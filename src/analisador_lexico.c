@@ -1,10 +1,11 @@
 #include "analisador_lexico.h"
 
 int linha = 1;
-char *buffer = "0x123;\n"
-                "int _teste;\n"
-                "scanf();"
-                ;
+char *buffer = "0x123 ;\n"
+                "int _teste ;\n"
+                "printaaaaaaf() ;\n"
+                ">  >=\n"
+                "< <= >";
 
 void ignora_delimitadores(){
     while(
@@ -49,15 +50,35 @@ TInfoAtomo obter_atomo(){
         buffer++;
         infoAtomo.atomo = FECHA_CHAVES;
     }
-    else if(*buffer == '*' || *buffer == '/'){
+    else if(*buffer == '<'){
         buffer++;
-        infoAtomo.atomo = OP_MULT;
+        infoAtomo.atomo = MENOR;
+        if (*buffer == '='){
+            buffer++;
+            infoAtomo.atomo = MENOR_IGUAL;
+        }
+    }
+    else if(*buffer == '>'){
+        buffer++;
+        infoAtomo.atomo = MAIOR;
+        if (*buffer == '='){
+            buffer++;
+            infoAtomo.atomo = MAIOR_IGUAL;
+        }
     }
     else if(*buffer == '+' || *buffer == '-'){
         buffer++;
         infoAtomo.atomo = OP_SOMA;
     }
-    else if(*buffer == '_')
+    else if(*buffer == '*' || *buffer == '/'){
+        buffer++;
+        infoAtomo.atomo = OP_MULT;
+    }
+   
+   strcpy(  infoAtomo.atributo, strAtomo[infoAtomo.atomo]);
+    
+    
+    if(*buffer == '_')
         infoAtomo = reconhece_id();
     else if(*buffer == '0')
         infoAtomo = reconhece_numero();        
@@ -145,8 +166,10 @@ q2:
 }
 
 TInfoAtomo reconhece_palavra_reservada(){
-    const int MAX_LENGTH = 6;
+    const int MAX_LENGTH = 7;
     char lexema[MAX_LENGTH];
+    memset(lexema, 0, MAX_LENGTH);
+
     TInfoAtomo infoAtomo;
     infoAtomo.atomo = ERRO;
 
@@ -156,12 +179,13 @@ TInfoAtomo reconhece_palavra_reservada(){
         *buffer != ' '  && 
         *buffer != '\n' && 
         *buffer != '\r' &&  
-        *buffer != '\t' && 
+        *buffer != '\t' &&
+        *buffer != '('  && 
         *buffer != '\0'
         )
     {
         if (i > MAX_LENGTH)
-            return infoAtomo;
+            return infoAtomo; // TODO copiar lexema para mensagem de erro
         
         lexema[i] = *buffer;
         buffer++;
@@ -184,6 +208,9 @@ TInfoAtomo reconhece_palavra_reservada(){
 
     strcpy(infoAtomo.atributo, lexema);
     
+    if (infoAtomo.atomo == ERRO)
+        strcpy(infoAtomo.erro, lexema);
+
     return infoAtomo;
 }
 
