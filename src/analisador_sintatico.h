@@ -30,7 +30,7 @@ void expressao_relacional();
 void expressao_adicao();
 void expressao_multi();
 
-void op_racional();
+void op_relacional();
 void operando();
 
 #endif

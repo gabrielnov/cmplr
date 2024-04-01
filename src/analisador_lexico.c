@@ -3,7 +3,7 @@
 
 int linha = 1;
 char *buffer = "int main(void) \n "
-                "{ _aaa2a; \n "
+                "{ int _aaa2a; \n "
                 " }";
 
 char * lista_tokens[]={    
@@ -11,27 +11,34 @@ char * lista_tokens[]={
         "Erro Lexico",
         "identificador",
         "numero",
+        "igual",
+        "diferente",
         "menor",
         "menor_igual",
         "maior",
         "maior_igual",
         "+",
+        "-",
         "*",
+        "/"
+        "operador_or",
+        "operador_and"
         "abre_par",
         "fecha_par",
         "abre_chaves",
         "fecha_chaves",
         "ponto_virgula",
-        "pr_int",
-        "pr_bool",
+        "pr_tipo", // pr = palavra reservada
         "pr_main",
-        "pr_funcao",
+        "pr_scanf",
+        "pr_printf",
         "pr_if",
         "pr_else",
         "pr_while",
         "pr_void",
         "pr_true",
         "pr_false",
+        "virgula"
     };
 
 void ignora_delimitadores(){
@@ -48,9 +55,9 @@ void ignora_delimitadores(){
 TInfoAtomo obter_atomo(){
     TInfoAtomo info_atomo;
     info_atomo.atomo=ERRO;
-    
-    ignora_delimitadores();
+    strcpy(info_atomo.atributo, "");
 
+    ignora_delimitadores();
     
     if(*buffer == '_')
         info_atomo = reconhece_id();
@@ -82,18 +89,18 @@ TInfoAtomo obter_atomo(){
     }
     else if(*buffer == '<'){
         buffer++;
-        info_atomo.atomo = MENOR;
+        info_atomo.atomo = OP_MENOR;
         if (*buffer == '='){
             buffer++;
-            info_atomo.atomo = MENOR_IGUAL;
+            info_atomo.atomo = OP_MENOR_IGUAL;
         }
     }
     else if(*buffer == '>'){
         buffer++;
-        info_atomo.atomo = MAIOR;
+        info_atomo.atomo = OP_MAIOR;
         if (*buffer == '='){
             buffer++;
-            info_atomo.atomo = MAIOR_IGUAL;
+            info_atomo.atomo = OP_MAIOR_IGUAL;
         }
     }
     else if(*buffer == '+' || *buffer == '-'){
@@ -105,7 +112,8 @@ TInfoAtomo obter_atomo(){
         info_atomo.atomo = OP_MULT;
     }
    
-    strcpy(info_atomo.atributo, lista_tokens[info_atomo.atomo]);
+    if (strlen(info_atomo.atributo) == 0 )
+        strcpy(info_atomo.atributo, lista_tokens[info_atomo.atomo]);
     
     info_atomo.linha = linha;
 
@@ -177,9 +185,14 @@ q2:
     if (
         *buffer != ' '  && 
         *buffer != '\n' && 
-        *buffer != '\r' &&
+        *buffer != '\r' &&  
         *buffer != '\t' &&
-        *buffer != '\0' 
+        *buffer != '('  &&
+        *buffer != ')'  && 
+        *buffer != '{'  &&
+        *buffer != '}'  &&
+        *buffer != ';'  &&
+        *buffer != '\0'
         )
     { info_atomo.atomo = ERRO; }
 
@@ -211,6 +224,7 @@ TInfoAtomo reconhece_palavra_reservada(){
         *buffer != ')'  && 
         *buffer != '{'  &&
         *buffer != '}'  &&
+        *buffer != ';'  &&
         *buffer != '\0'
         )
     {
@@ -226,13 +240,13 @@ TInfoAtomo reconhece_palavra_reservada(){
     else if (strcmp(lexema, "if") == 0) info_atomo.atomo = PR_IF;
     else if (strcmp(lexema, "else") == 0) info_atomo.atomo = PR_ELSE;
     else if (strcmp(lexema, "void") == 0) info_atomo.atomo = PR_VOID;
-    else if (strcmp(lexema, "int") == 0) info_atomo.atomo = PR_INT;
-    else if (strcmp(lexema, "bool") == 0) info_atomo.atomo = PR_BOOL;
+    else if (strcmp(lexema, "int") == 0) info_atomo.atomo = PR_TIPO;
+    else if (strcmp(lexema, "bool") == 0) info_atomo.atomo = PR_TIPO;
     else if (strcmp(lexema, "true") == 0) info_atomo.atomo = PR_TRUE;
     else if (strcmp(lexema, "false") == 0) info_atomo.atomo = PR_FALSE;
     else if (strcmp(lexema, "main") == 0) info_atomo.atomo = PR_MAIN;
-    else if (strcmp(lexema, "printf") == 0) info_atomo.atomo = PR_FUNCTION;
-    else if (strcmp(lexema, "scanf") == 0) info_atomo.atomo = PR_FUNCTION;
+    else if (strcmp(lexema, "printf") == 0) info_atomo.atomo = PR_PRINTF;
+    else if (strcmp(lexema, "scanf") == 0) info_atomo.atomo = PR_SCANF;
 
     strcpy(info_atomo.atributo, lista_tokens[info_atomo.atomo]);
     

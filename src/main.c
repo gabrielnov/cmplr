@@ -2,7 +2,7 @@
 
 
 // char *buffer = "int main(void) \n "
-//                 "{ _aaa2a; \n "
+//                 "{ int _aaa2a; \n "
 //                 " }";
 
 int main(void){

@@ -7,29 +7,36 @@ typedef enum{
     IDENTIFICADOR,
     NUMERO,
     // operadores
-    MENOR,
-    MENOR_IGUAL,
-    MAIOR,
-    MAIOR_IGUAL,
+    OP_IGUAL,
+    OP_DIFERENTE,
+    OP_MENOR,
+    OP_MENOR_IGUAL,
+    OP_MAIOR,
+    OP_MAIOR_IGUAL,
     OP_SOMA, 
+    OP_SUBTR,
     OP_MULT,
+    OP_DIV,
+    OP_OR,
+    OP_AND,
     ABRE_PAR,
     FECHA_PAR,
     ABRE_CHAVES,
     FECHA_CHAVES,
     PONTO_VIRGULA,
     // palavras reservadas
-    PR_INT,
-    PR_BOOL,
+    PR_TIPO,
     PR_MAIN,
-    PR_FUNCTION,
+    PR_SCANF,
+    PR_PRINTF,
     PR_IF,
     PR_ELSE,
     PR_WHILE,
     PR_VOID,
     PR_TRUE,
-    PR_FALSE
-
+    PR_FALSE,
+    // outros
+    VIRGULA
 } TAtomo;
 
 typedef struct{
