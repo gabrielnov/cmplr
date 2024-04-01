@@ -2,7 +2,9 @@
 #include "tokens.h"
 
 int linha = 1;
-char *buffer = "int main(void) { }";
+char *buffer = "int main(void) \n "
+                "{ _aaa2a; \n "
+                " }";
 
 char * lista_tokens[]={    
         "Fim de buffer(EOS)",
@@ -23,8 +25,7 @@ char * lista_tokens[]={
         "pr_int",
         "pr_bool",
         "pr_main",
-        "pr_printf",
-        "pr_scanf",
+        "pr_funcao",
         "pr_if",
         "pr_else",
         "pr_while",
@@ -50,15 +51,18 @@ TInfoAtomo obter_atomo(){
     
     ignora_delimitadores();
 
-    if(*buffer == '\0')
+    
+    if(*buffer == '_')
+        info_atomo = reconhece_id();
+    else if(*buffer == '0')
+        info_atomo = reconhece_numero();        
+    else if ((*buffer >= 'a' && *buffer <= 'z') || (*buffer >= 'A' && *buffer <= 'Z'))
+        info_atomo = reconhece_palavra_reservada();
+    else if(*buffer == '\0')
         info_atomo.atomo = EOS;
     else if(*buffer == ';'){
         buffer++;
         info_atomo.atomo = PONTO_VIRGULA;
-    }
-    else if(*buffer == ')'){
-        buffer++;
-        info_atomo.atomo = FECHA_PAR;
     }
     else if(*buffer == '('){
         buffer++;
@@ -101,17 +105,12 @@ TInfoAtomo obter_atomo(){
         info_atomo.atomo = OP_MULT;
     }
    
-   strcpy(info_atomo.atributo, lista_tokens[info_atomo.atomo]);
+    strcpy(info_atomo.atributo, lista_tokens[info_atomo.atomo]);
     
-    
-    if(*buffer == '_')
-        info_atomo = reconhece_id();
-    else if(*buffer == '0')
-        info_atomo = reconhece_numero();        
-    else if(isalpha(*buffer))
-        info_atomo = reconhece_palavra_reservada();
-
     info_atomo.linha = linha;
+
+    imprime_atomo(info_atomo);
+
     return info_atomo;
 }
 
@@ -131,11 +130,13 @@ q1:
         goto q2;
     } else info_atomo.atomo = ERRO;
 q2:
+    if(*buffer == ')' || *buffer == ';' || *buffer == '}')
+        goto q3;
     if(isalpha(*buffer) || isdigit(*buffer)){
         buffer++;    
-        goto q1;
+        goto q2;
     } else info_atomo.atomo = ERRO;
-    
+q3:    
     if( buffer - iniLexema <= 15 ){ // maximo de quinze characteres por identificador
         strncpy(info_atomo.atributo, iniLexema, buffer - iniLexema);
         info_atomo.atributo[buffer-iniLexema] = '\0'; // finaliza string
@@ -206,7 +207,10 @@ TInfoAtomo reconhece_palavra_reservada(){
         *buffer != '\n' && 
         *buffer != '\r' &&  
         *buffer != '\t' &&
-        *buffer != '('  && 
+        *buffer != '('  &&
+        *buffer != ')'  && 
+        *buffer != '{'  &&
+        *buffer != '}'  &&
         *buffer != '\0'
         )
     {
@@ -227,8 +231,8 @@ TInfoAtomo reconhece_palavra_reservada(){
     else if (strcmp(lexema, "true") == 0) info_atomo.atomo = PR_TRUE;
     else if (strcmp(lexema, "false") == 0) info_atomo.atomo = PR_FALSE;
     else if (strcmp(lexema, "main") == 0) info_atomo.atomo = PR_MAIN;
-    else if (strcmp(lexema, "printf") == 0) info_atomo.atomo = PR_PRINTF;
-    else if (strcmp(lexema, "scanf") == 0) info_atomo.atomo = PR_SCANF;
+    else if (strcmp(lexema, "printf") == 0) info_atomo.atomo = PR_FUNCTION;
+    else if (strcmp(lexema, "scanf") == 0) info_atomo.atomo = PR_FUNCTION;
 
     strcpy(info_atomo.atributo, lista_tokens[info_atomo.atomo]);
     
@@ -238,30 +242,19 @@ TInfoAtomo reconhece_palavra_reservada(){
     return info_atomo;
 }
 
-// int main(void){
-//     TInfoAtomo info_atomo;
+void imprime_atomo(TInfoAtomo info_atomo){
+    printf("# %d: ", info_atomo.linha);
 
-//     printf("Analisando:\n\n----\n%s\n----\n\n",buffer);
+    if( info_atomo.atomo == IDENTIFICADOR)
+        printf("identificador | ");
+    else if( info_atomo.atomo == NUMERO ){
+        printf("numero | %.4f\n", info_atomo.atributo_numero);      
+        return;
+    }
+    else if( info_atomo.atomo == ERRO ){
+        printf("erro lexico: %s\n", info_atomo.erro);
+        return;
+    }
 
-//     while(1){
-//         info_atomo = obter_atomo();
-//         if( info_atomo.atomo == EOS )
-//             break;
-
-//         printf("# %d: ", info_atomo.linha);
-
-//         if( info_atomo.atomo == IDENTIFICADOR)
-//             printf("identificador | ");
-//         else if( info_atomo.atomo == NUMERO ){
-//             printf("numero | %.4f\n", info_atomo.atributo_numero);
-//             continue;             
-//         }
-//         else if( info_atomo.atomo == ERRO ){
-//             printf("erro lexico: %s\n", info_atomo.erro);
-//             break;
-//         }
-
-//         printf("%s\n", info_atomo.atributo);
-//     }    
-        
-// }
+   printf("%s\n", info_atomo.atributo);    
+}

@@ -15,16 +15,15 @@ char * lista_tokens_2[]={
         "maior_igual",
         "+",
         "*",
-        "(",
-        ")",
-        "{",
-        "}",
+        "abre_parenteses",
+        "fecha_parenteses",
+        "abre_chaves",
+        "fecha_chaves",
         " ; ",
         "int",
         "bool",
         "main",
-        "printf",
-        "scanf",
+        "funcao",
         "if",
         "else",
         "while",
@@ -65,8 +64,8 @@ void consome( TAtomo atomo){
         lookahead = info_atomo.atomo;
     }
     else{
-        printf("erro sintatico: esperado [%s] encontrado [%s]\n", 
-                lista_tokens_2[atomo], lista_tokens_2[lookahead]);
+        printf("linha %d | erro sintatico: esperado [ %s ] encontrado [ %s ]\n", 
+                info_atomo.linha, lista_tokens_2[atomo], lista_tokens_2[lookahead]);
 
         exit(1);
     }
