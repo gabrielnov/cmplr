@@ -6,20 +6,15 @@ TInfoAtomo info_atomo;
 char * buffer;
 
 void inicia(){
-    char str[1000];
-    memcpy(str, abrir_arquivo("teste.txt"), 1000);
-    buffer = str;
-
-    info_atomo = obter_atomo(buffer);
+    abrir_arquivo("teste.txt");
+    info_atomo = obter_atomo();
     lookahead = info_atomo.atomo;
     programa();
 }
 
 void consome( TAtomo atomo){
-    printf("buffer %s\n", buffer);
-
     if( lookahead == atomo ){
-        info_atomo = obter_atomo(buffer);
+        info_atomo = obter_atomo();
         lookahead = info_atomo.atomo;
     }
     else{

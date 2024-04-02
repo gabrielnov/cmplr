@@ -1,8 +1,9 @@
 #include "analisador_lexico.h"
 
 int linha = 1;
+extern char * buffer; // TODO nao usar variavel global
 
-void ignora_delimitadores(char * buffer){
+void ignora_delimitadores(){
     while(
         *buffer == ' ' || *buffer == '\n' || *buffer == '\t' || *buffer == '\r'
         ){
@@ -13,7 +14,7 @@ void ignora_delimitadores(char * buffer){
     }
 }
 
-TInfoAtomo obter_atomo(char * buffer){
+TInfoAtomo obter_atomo(){
     
     TInfoAtomo info_atomo;
     info_atomo.atomo=ERRO;
@@ -84,7 +85,7 @@ TInfoAtomo obter_atomo(char * buffer){
     return info_atomo;
 }
 
-TInfoAtomo reconhece_id(char * buffer){
+TInfoAtomo reconhece_id(){
     TInfoAtomo info_atomo;
     char * lexema;
     lexema = buffer;
@@ -118,7 +119,7 @@ q3:
     return info_atomo;
 }
 
-TInfoAtomo reconhece_numero(char * buffer){
+TInfoAtomo reconhece_numero(){
     char * lexema;
     lexema = buffer;
     TInfoAtomo info_atomo;
@@ -165,7 +166,7 @@ q0:
     return info_atomo;
 }
 
-TInfoAtomo reconhece_palavra_reservada(char * buffer){
+TInfoAtomo reconhece_palavra_reservada(){
     const int MAX_LENGTH = 7;
     char lexema[MAX_LENGTH];
     memset(lexema, 0, MAX_LENGTH);

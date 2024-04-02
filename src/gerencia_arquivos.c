@@ -1,6 +1,6 @@
 #include "gerencia_arquivos.h"
 
-char * abrir_arquivo(char const* caminho_arquivo){
+void abrir_arquivo(char const* caminho_arquivo){
     FILE* arquivo;
     long num_bytes;
     
@@ -25,10 +25,10 @@ char * abrir_arquivo(char const* caminho_arquivo){
 
     fseek(arquivo, 0L, SEEK_SET);	
 
-    char *buffer = malloc (sizeof (char) * 1000);
+    buffer = (char*)calloc(num_bytes, sizeof(char));	
     fread(buffer, sizeof(char), num_bytes, arquivo);
 
     fclose(arquivo);
     
-    return buffer;
+    printf("buffer: %s\n",buffer);
 }

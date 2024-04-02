@@ -6,6 +6,7 @@
 
 #include "tokens.h"
 
-char * abrir_arquivo(char const*);
+extern char *buffer; // TODO nao usar variavel global
+void abrir_arquivo(char const*);
 
 #endif

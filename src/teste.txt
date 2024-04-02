@@ -1,4 +1,4 @@
-int main(void) \n 
+int main(void)
 { 
-    int _aaa2a; \n 
+    int _aaa2a; 
 }

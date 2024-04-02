@@ -10,11 +10,11 @@
 
 extern const char * const lista_tokens[];
 
-void ignora_delimitadores(char *);
-TInfoAtomo obter_atomo(char *);
-TInfoAtomo reconhece_id(char *);
-TInfoAtomo reconhece_palavra_reservada(char *);
-TInfoAtomo reconhece_numero(char *);
+void ignora_delimitadores();
+TInfoAtomo obter_atomo();
+TInfoAtomo reconhece_id();
+TInfoAtomo reconhece_palavra_reservada();
+TInfoAtomo reconhece_numero();
 void imprime_atomo(TInfoAtomo info_atomo);
 
 #endif
