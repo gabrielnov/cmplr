@@ -7,6 +7,7 @@ typedef enum{
     IDENTIFICADOR,
     NUMERO,
     // operador
+    OP_ATRIBUICAO,
     OP_IGUAL,
     OP_DIFERENTE,
     OP_MENOR,

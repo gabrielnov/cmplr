@@ -34,6 +34,26 @@ TInfoAtomo obter_atomo(){
         buffer++;
         info_atomo.atomo = PONTO_VIRGULA;
     }
+    else if(*buffer == '&'){
+        info_atomo.atomo = ERRO;
+        buffer++;
+        if (*buffer == '&'){
+            info_atomo.atomo = OP_AND;
+            buffer++;
+        }
+    }
+    else if(*buffer == '|'){
+        info_atomo.atomo = ERRO;
+        buffer++;
+        if (*buffer == '|'){
+            info_atomo.atomo = OP_OR;
+            buffer++;
+        } 
+    }
+    else if(*buffer == ','){
+        buffer++;
+        info_atomo.atomo = VIRGULA;
+    }
     else if(*buffer == '('){
         buffer++;
         info_atomo.atomo = ABRE_PAR;
@@ -66,13 +86,37 @@ TInfoAtomo obter_atomo(){
             info_atomo.atomo = OP_MAIOR_IGUAL;
         }
     }
-    else if(*buffer == '+' || *buffer == '-'){
+    else if(*buffer == '+'){
         buffer++;
         info_atomo.atomo = OP_SOMA;
     }
-    else if(*buffer == '*' || *buffer == '/'){
+    else if(*buffer == '-'){
+        buffer++;
+        info_atomo.atomo = OP_SUBTR;
+    }
+    else if(*buffer == '*'){
         buffer++;
         info_atomo.atomo = OP_MULT;
+    }
+    else if(*buffer == '/'){
+        buffer++;
+        info_atomo.atomo = OP_DIV;
+    }
+    else if(*buffer == '='){
+        info_atomo.atomo = OP_ATRIBUICAO;
+        buffer++;
+        if (*buffer == '='){
+            info_atomo.atomo = OP_IGUAL;
+            buffer++;
+        }
+    }
+    else if(*buffer == '!'){
+        info_atomo.atomo = ERRO;
+        buffer++;
+        if (*buffer == '='){
+            info_atomo.atomo = OP_DIFERENTE;
+            buffer++;
+        }
     }
    
     if (strlen(info_atomo.atributo) == 0 )

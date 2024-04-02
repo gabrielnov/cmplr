@@ -6,6 +6,7 @@ const char * const lista_tokens[]={
         "identificador",
         "numero",
         // operador
+        "operador_atribuicao",
         "operador_igual",
         "operador_diferente",
         "operador_menor",
