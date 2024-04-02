@@ -1,0 +1,4 @@
+int main(void) \n 
+{ 
+    int _aaa2a; \n 
+}

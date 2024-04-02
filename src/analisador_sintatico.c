@@ -1,52 +1,38 @@
 #include "analisador_sintatico.h"
-#include "tokens.h"
 
 TAtomo lookahead;
 TInfoAtomo info_atomo;
 
-char * lista_tokens_2[]={    
-        "Fim de buffer(EOS)",
-        "Erro Lexico",
-        "identificador",
-        "numero",
-        "==",
-        "!="
-        "<",
-        "<=",
-        ">",
-        ">=",
-        "+",
-        "*",
-        "||",
-        "&&",
-        "(",
-        ")",
-        "{",
-        "}",
-        ";",
-        "int | bool",
-        "main",
-        "scanf",
-        "printf",
-        "if",
-        "else",
-        "while",
-        "void",
-        "true",
-        "false",
-        ","
-    };
+char * buffer;
 
 void inicia(){
-    info_atomo = obter_atomo();
-    lookahead = info_atomo.atomo;
+    char str[1000];
+    memcpy(str, abrir_arquivo("teste.txt"), 1000);
+    buffer = str;
 
+    info_atomo = obter_atomo(buffer);
+    lookahead = info_atomo.atomo;
     programa();
+}
+
+void consome( TAtomo atomo){
+    printf("buffer %s\n", buffer);
+
+    if( lookahead == atomo ){
+        info_atomo = obter_atomo(buffer);
+        lookahead = info_atomo.atomo;
+    }
+    else{
+        printf("linha %d | erro sintatico: esperado [ %s ] encontrado [ %s ]\n", 
+                info_atomo.linha, lista_tokens[atomo], lista_tokens[lookahead]);
+
+        exit(1);
+    }
 }
 
 void programa(){
     //  int main “(” void “)” “{“ <declaracoes> <comandos> “}”
-    consome(PR_TIPO);
+    consome(PR_INT);
     consome(PR_MAIN);
     consome(ABRE_PAR);
     consome(PR_VOID);
@@ -66,7 +52,7 @@ void declaracoes(){
 }
 
 void declaracao(){
-    consome(PR_TIPO);
+    consome(PR_INT); // TODO alterar para INT ou BOOL
     consome(IDENTIFICADOR);
 
     // while(1){ TODO implementar repetição
@@ -204,17 +190,4 @@ void operando(){
     consome(PR_FALSE);
     expressao();
     //
-}
-void consome( TAtomo atomo){
-    if( lookahead == atomo ){
-        info_atomo = obter_atomo();
-        lookahead = info_atomo.atomo;
-    }
-    else{
-        printf("linha %d | erro sintatico: esperado [ %s ] encontrado [ %s ]\n", 
-                info_atomo.linha, lista_tokens_2[atomo], lista_tokens_2[lookahead]);
-
-        exit(1);
-    }
-
 }

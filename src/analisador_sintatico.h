@@ -1,11 +1,15 @@
-#ifndef _ANALISADOR_SINTATICO_H_
-#define _ANALISADOR_SINTATICO_H_
+#ifndef ANALISADOR_SINTATICO_H
+#define ANALISADOR_SINTATICO_H
 
+#include "gerencia_arquivos.h"
 #include "analisador_lexico.h"
+#include "tokens.h"
+
+extern const char * const lista_tokens[];
 
 void inicia();
 
-void consome( TAtomo atomo);
+void consome(TAtomo);
 
 void programa();
 

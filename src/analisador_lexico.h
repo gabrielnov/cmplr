@@ -1,5 +1,5 @@
-#ifndef _ANALISADOR_LEXICO_H_
-#define _ANALISADOR_LEXICO_H_
+#ifndef ANALISADOR_LEXICO_H
+#define ANALISADOR_LEXICO_H
 
 #include <stdio.h>
 #include <ctype.h>
@@ -8,11 +8,13 @@
 
 #include "tokens.h"
 
-void ignora_delimitadores();
-TInfoAtomo obter_atomo();
-TInfoAtomo reconhece_id();
-TInfoAtomo reconhece_palavra_reservada();
-TInfoAtomo reconhece_numero();
+extern const char * const lista_tokens[];
+
+void ignora_delimitadores(char *);
+TInfoAtomo obter_atomo(char *);
+TInfoAtomo reconhece_id(char *);
+TInfoAtomo reconhece_palavra_reservada(char *);
+TInfoAtomo reconhece_numero(char *);
 void imprime_atomo(TInfoAtomo info_atomo);
 
 #endif

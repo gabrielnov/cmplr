@@ -1,12 +1,12 @@
-#ifndef _TOKENS_H_
-#define _TOKENS_H_
+#ifndef TOKENS_H
+#define TOKENS_H
 
 typedef enum{
     EOS, // end of string    
     ERRO,
     IDENTIFICADOR,
     NUMERO,
-    // operadores
+    // operador
     OP_IGUAL,
     OP_DIFERENTE,
     OP_MENOR,
@@ -19,13 +19,9 @@ typedef enum{
     OP_DIV,
     OP_OR,
     OP_AND,
-    ABRE_PAR,
-    FECHA_PAR,
-    ABRE_CHAVES,
-    FECHA_CHAVES,
-    PONTO_VIRGULA,
-    // palavras reservadas
-    PR_TIPO,
+    // palavra reservada
+    PR_INT,
+    PR_BOOL,
     PR_MAIN,
     PR_SCANF,
     PR_PRINTF,
@@ -36,7 +32,12 @@ typedef enum{
     PR_TRUE,
     PR_FALSE,
     // outros
-    VIRGULA
+    VIRGULA,
+    ABRE_PAR,
+    FECHA_PAR,
+    ABRE_CHAVES,
+    FECHA_CHAVES,
+    PONTO_VIRGULA,
 } TAtomo;
 
 typedef struct{
