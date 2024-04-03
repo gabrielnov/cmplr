@@ -47,7 +47,6 @@ typedef struct{
     int linha;
     float atributo_numero;
     char atributo[15];
-    char erro[100];
 } TInfoAtomo;
 
 #endif

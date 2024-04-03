@@ -1,14 +1,13 @@
 int main(void){
-    int _num1, _num2;
-    int _maior;
-    _num2 = 0xFFF;
+    int _num2, _num1;
+    _num2a = 0xF;
     _maior = _num1 * (_num2 + _num1);
     scanf(_num1);
     /*
     aaaa*/
     scanf(_num2);
     // TESTE1234   a
-    if( _num1 > _num2 )
+    if( _num1 > _num2 && _num2 < _num1)
         _maior = _num1;
     else
         _maior = _num2;

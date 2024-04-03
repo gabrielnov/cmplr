@@ -1,8 +1,8 @@
 #include "tokens.h"
 
 const char * const lista_tokens[]={    
-        "Fim de buffer(EOS)",
-        "Erro Lexico",
+        "fim de buffer(EOS)",
+        "erro Lexico",
         "identificador",
         "numero",
         "comentario",
