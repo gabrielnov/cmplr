@@ -5,8 +5,8 @@ TInfoAtomo info_atomo;
 
 char * buffer;
 
-void inicia(){
-    abrir_arquivo("teste.txt");
+void inicia(char * arquivo){
+    abrir_arquivo(arquivo);
     info_atomo = obter_atomo();
     lookahead = info_atomo.atomo;
     programa();

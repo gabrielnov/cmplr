@@ -7,7 +7,7 @@
 
 extern const char * const lista_tokens[];
 
-void inicia();
+void inicia(char *);
 
 void consome(TAtomo);
 
