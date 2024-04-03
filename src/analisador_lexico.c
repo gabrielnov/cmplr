@@ -220,15 +220,13 @@ TInfoAtomo reconhece_numero(){
     TInfoAtomo info_atomo;
     info_atomo.atomo = NUMERO;
 
-    if(*buffer == '0'){
-        buffer++;
-        goto q0;
-    } else info_atomo.atomo = ERRO; 
+    buffer++;
+  
+    if(*buffer == 'x')
+        buffer++; 
+    else
+        info_atomo.atomo = ERRO; 
 
-    if(*buffer == 'x'){
-        buffer++;
-        goto q0;
-    } else info_atomo.atomo = ERRO; 
 q0:
     if(
         (*buffer >= 65 && *buffer <= 70 ) ||

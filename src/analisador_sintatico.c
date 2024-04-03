@@ -53,25 +53,23 @@ void declaracoes(){
     }
 }
 
-// <declaracao> ::= <tipo> identificador { “,” identificador } “;” 
+// <declaracao> ::= <tipo> <lista_variavel> “;”
 void declaracao(){
     if (lookahead == PR_INT || lookahead == PR_BOOL)
         consome(lookahead);
 
+    lista_variavel();
+    consome(PONTO_VIRGULA);
+}
+
+// <lista_variavel> ::= identificador { “,” identificador }
+void lista_variavel(){
     consome(IDENTIFICADOR);
 
     while(lookahead == VIRGULA){ 
         consome(VIRGULA);
         consome(IDENTIFICADOR);
     }
-
-    consome(PONTO_VIRGULA);
-}
-
-// <tipo> ::= [ int | bool ]
-void tipo(){
-    if(lookahead == PR_INT|| lookahead == PR_BOOL)
-        consome(lookahead);
 }
 
 // <bloco_comandos> ::= “{“ <comandos> “}” 
@@ -151,8 +149,7 @@ void comando_while(){
 void comando_entrada(){
     consome(PR_SCANF);
     consome(ABRE_PAR);
-    // lista_variavel(); // TODO ver o que é isso
-    consome(IDENTIFICADOR);
+    lista_variavel();
     consome(FECHA_PAR);
     consome(PONTO_VIRGULA);
 }
@@ -245,18 +242,22 @@ void expressao_multi(){
 }
 
 // <operando> ::= identificador |
-//      numero |
-//      true |
-//      false |
-//      <expressao> 
+// numero |
+// true |
+// false |
+// “(“ <expressao> “)”
 void operando(){
      if (
         lookahead == IDENTIFICADOR ||
         lookahead == NUMERO ||
         lookahead == PR_TRUE ||
         lookahead == PR_FALSE
-        // TODO <expressao>
     ){
         consome(lookahead);
+    } else if(lookahead == ABRE_PAR){
+        consome(ABRE_PAR);
+        expressao();
+        consome(FECHA_PAR);
     }
+    
 }

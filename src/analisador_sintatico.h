@@ -16,7 +16,7 @@ void programa();
 void declaracoes();
 void declaracao();
 
-void tipo();
+void lista_variavel();
 
 void bloco_comandos();
 void comandos();
