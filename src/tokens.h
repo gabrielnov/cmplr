@@ -46,7 +46,7 @@ typedef struct{
     TAtomo atomo;
     int linha;
     float atributo_numero;
-    char atributo[15];
+    char atributo[30];
 } TInfoAtomo;
 
 #endif
