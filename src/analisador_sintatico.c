@@ -10,14 +10,19 @@ void inicia(){
     info_atomo = obter_atomo();
     lookahead = info_atomo.atomo;
     programa();
+    printf("%d linhas analisadas, programa sintaticamente correto\n", info_atomo.linha);
 }
 
-void consome( TAtomo atomo){
-    if( lookahead == atomo ){
+void consome(TAtomo atomo){
+    if (lookahead == COMENTARIO){
         info_atomo = obter_atomo();
         lookahead = info_atomo.atomo;
     }
-    else{
+
+    if (lookahead == atomo ){
+        info_atomo = obter_atomo();
+        lookahead = info_atomo.atomo;
+    } else{
         printf("linha %d | erro sintatico: esperado [ %s ] encontrado [ %s ]\n", 
                 info_atomo.linha, lista_tokens[atomo], lista_tokens[lookahead]);
 
@@ -78,7 +83,7 @@ void bloco_comandos(){
 
 // <comandos> ::= { <comando> } 
 void comandos(){
-    while(lookahead != '}') // TODO
+    while(lookahead != FECHA_CHAVES) // TODO
         comando();
 }
 
@@ -90,6 +95,10 @@ void comandos(){
 //      <comando_entrada> |
 //      <comando_saida> 
 void comando(){
+    if (lookahead == COMENTARIO){
+        lookahead = obter_atomo().atomo;
+    }
+
     if (lookahead == ABRE_CHAVES)
         bloco_comandos();
     else if (lookahead == PONTO_VIRGULA)  
@@ -124,7 +133,7 @@ void comando_if(){
     comando();
     
     if (lookahead == PR_ELSE){
-        consome(lookahead); // TODO implementar condicional
+        consome(lookahead); 
         comando();
     }
 }

@@ -11,6 +11,8 @@
 extern const char * const lista_tokens[];
 
 void ignora_delimitadores();
+TInfoAtomo reconhece_comentario();
+TInfoAtomo reconhece_comentario_mult();
 TInfoAtomo obter_atomo();
 TInfoAtomo reconhece_id();
 TInfoAtomo reconhece_palavra_reservada();

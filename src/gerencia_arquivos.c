@@ -29,6 +29,4 @@ void abrir_arquivo(char const* caminho_arquivo){
     fread(buffer, sizeof(char), num_bytes, arquivo);
 
     fclose(arquivo);
-    
-    printf("buffer: %s\n",buffer);
 }

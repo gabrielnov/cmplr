@@ -1,12 +1,16 @@
 #include "analisador_lexico.h"
 
 int linha = 1;
-extern char * buffer; // TODO nao usar variavel global
+extern char * buffer;
 
 void ignora_delimitadores(){
     while(
-        *buffer == ' ' || *buffer == '\n' || *buffer == '\t' || *buffer == '\r'
-        ){
+        *buffer == ' ' || 
+        *buffer == '\n' || 
+        *buffer == '\t' || 
+        *buffer == '\r'
+        )
+    {
         if(*buffer=='\n')
             linha++;
 
@@ -15,11 +19,11 @@ void ignora_delimitadores(){
 }
 
 TInfoAtomo obter_atomo(){
-    
     TInfoAtomo info_atomo;
-    info_atomo.atomo=ERRO;
+    
+    info_atomo.atomo = ERRO;
     strcpy(info_atomo.atributo, "");
-
+    
     ignora_delimitadores(buffer);
 
     if(*buffer == '_')
@@ -100,7 +104,12 @@ TInfoAtomo obter_atomo(){
     }
     else if(*buffer == '/'){
         buffer++;
-        info_atomo.atomo = OP_DIV;
+        if (*buffer == '/')
+            info_atomo = reconhece_comentario();
+        else if (*buffer == '*')
+            info_atomo = reconhece_comentario_mult();
+        else
+            info_atomo.atomo = OP_DIV;
     }
     else if(*buffer == '='){
         info_atomo.atomo = OP_ATRIBUICAO;
@@ -125,6 +134,48 @@ TInfoAtomo obter_atomo(){
     info_atomo.linha = linha;
 
     imprime_atomo(info_atomo);
+
+    return info_atomo;
+}
+
+TInfoAtomo reconhece_comentario(){
+    TInfoAtomo info_atomo;
+    strcpy(info_atomo.atributo, lista_tokens[COMENTARIO]);
+
+    buffer++;
+
+    while(*buffer != '\n'){
+        buffer++;
+    }
+    
+    info_atomo.atomo = COMENTARIO; 
+
+    return info_atomo;
+}
+
+TInfoAtomo reconhece_comentario_mult(){
+    TInfoAtomo info_atomo;
+    strcpy(info_atomo.atributo, lista_tokens[COMENTARIO]);
+
+    buffer++;
+
+    while(*buffer != '\0'){
+        if (*buffer == '*'){
+            buffer++;
+
+            if (*buffer == '/'){
+                buffer++;
+                info_atomo.atomo = COMENTARIO;
+                return info_atomo;
+            } 
+        }
+        else if (*buffer == '\n')
+            linha++;
+        
+        buffer++;
+    }
+    info_atomo.atomo = ERRO;
+    
 
     return info_atomo;
 }
@@ -274,6 +325,5 @@ void imprime_atomo(TInfoAtomo info_atomo){
         printf("erro lexico: %s\n", info_atomo.erro);
         return;
     }
-
    printf("%s\n", info_atomo.atributo);    
 }

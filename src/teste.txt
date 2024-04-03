@@ -2,10 +2,17 @@ int main(void){
     int _num1, _num2;
     int _maior;
     scanf(_num1);
+    /*
+    aaaa
+    aaaaa
+    aaaa
+    aaaa*/
     scanf(_num2);
+    // TESTE1234   a
     if( _num1 > _num2 )
         _maior = _num1;
     else
         _maior = _num2;
+        // TESTE1234   a
     printf(_maior); 
 } 

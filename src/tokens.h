@@ -6,6 +6,7 @@ typedef enum{
     ERRO,
     IDENTIFICADOR,
     NUMERO,
+    COMENTARIO,
     // operador
     OP_ATRIBUICAO,
     OP_IGUAL,
